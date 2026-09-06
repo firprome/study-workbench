@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>学习工作台 · 考研主攻</title>
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DESIGN TOKENS (参考 GitHub Primer / Google DESIGN.md 规范)
+   ============================================================ */
+:root{
+  /* 颜色系统 - 功能化命名 */
+  --bg-default:#F7F5F2;      /* 页面底色 - 浅色纸感 */
+  --bg-surface:#FFFFFF;      /* 卡片底色 */
+  --bg-subtle:#F0EDE8;       /* 次级块底色 */
+  --bg-inset:#E9E5DE;        /* 内嵌块底色 */
+  --border:#E3DED6;          /* 边框 */
+  --border-strong:#CFC8BD;   /* 强调边框 */
+  --text-primary:#1A1C1E;    /* 主文字 */
+  --text-secondary:#5B6168;  /* 次要文字 */
+  --text-muted:#8A9098;      /* 弱化文字 */
+  --text-invert:#FFFFFF;     /* 深底上的文字 */
+
+  /* 方向语义色 */
+  --kaoyan:#1F3D2B;          /* 考研 - 墨绿 */
+  --kaoyan-soft:#E7EEE9;
+  --line:#2B4C7E;            /* 六级/英语 - 靛蓝 */
+  --line-soft:#E8EEF5;
+  --work:#B8422E;            /* 就业/V3 - 土橙 */
+  --work-soft:#F7ECE8;
+  --gk:#5A6B7C;              /* 考公 - 灰蓝 */
+  --gk-soft:#EDF0F3;
+
+  /* 状态色 */
+  --danger:#C93C20;
+  --danger-soft:#F9E9E5;
+  --success:#2E7D4F;
+  --success-soft:#E7F1EB;
+
+  /* 间距系统 - 4px 网格 */
+  --space-1:4px;
+  --space-2:8px;
+  --space-3:12px;
+  --space-4:16px;
+  --space-5:24px;
+  --space-6:32px;
+  --space-7:48px;
+  --space-8:64px;
+
+  /* 圆角 */
+  --radius-sm:6px;
+  --radius-md:10px;
+  --radius-lg:14px;
+
+  /* 阴影（克制使用） */
+  --shadow-sm:0 1px 2px rgba(26,28,30,.05);
+  --shadow-md:0 4px 12px rgba(26,28,30,.06);
+
+  /* 排版 */
+  --font-display:'Noto Sans SC',-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'PingFang SC','Microsoft YaHei',sans-serif;
+  --fs-display:44px;
+  --fs-h1:32px;
+  --fs-h2:24px;
+  --fs-h3:19px;
+  --fs-body:16px;
+  --fs-small:13px;
+  --fs-caption:12px;
+  --fs-stat:36px;
+  --lh-tight:1.25;
+  --lh-normal:1.5;
+  --lh-loose:1.7;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-display);
+  background:var(--bg-default);
+  color:var(--text-primary);
+  font-size:var(--fs-body);
+  line-height:var(--lh-normal);
+  -webkit-font-smoothing:antialiased;
+  padding:var(--space-5) 0 var(--space-8);
+}
+.container{max-width:1280px;margin:0 auto;padding:0 var(--space-5)}
+
+/* ============ ① 顶部状态条 ============ */
+.masthead{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:var(--space-4);
+  padding:var(--space-5) var(--space-6);
+  background:var(--kaoyan);
+  color:var(--text-invert);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-md);
+}
+.masthead .brand{display:flex;flex-direction:column;gap:var(--space-1)}
+.masthead h1{font-size:var(--fs-h1);font-weight:900;letter-spacing:-.02em;line-height:var(--lh-tight)}
+.masthead .sub{font-size:var(--fs-small);opacity:.85;font-weight:300}
+.masthead .meta{display:flex;gap:var(--space-4);align-items:center;flex-wrap:wrap}
+.pill{
+  display:inline-flex;align-items:center;gap:var(--space-2);
+  padding:var(--space-2) var(--space-4);
+  border-radius:999px;font-size:var(--fs-small);font-weight:500;
+}
+.pill.badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28)}
+.pill.strategy{background:var(--work);border:none}
+.pill .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.pill.sync-btn{cursor:pointer;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);transition:background .15s;user-select:none}
+.pill.sync-btn:hover{background:rgba(255,255,255,.24)}
+.pill.sync-btn.export{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.4)}
+.pill.sync-btn.import{background:transparent;border-style:dashed}
+#syncFileInput{display:none}
+
+/* ============ ② 倒计时 + 完成度 ============ */
+.countdown-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:var(--space-4);margin-top:var(--space-5);
+}
+.count-card{
+  background:var(--bg-surface);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:var(--space-4) var(--space-5);
+  display:flex;flex-direction:column;gap:var(--space-1);
+  box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+}
+.count-card .label{font-size:var(--fs-caption);color:var(--text-secondary);letter-spacing:.06em}
+.count-card .num{font-size:var(--fs-stat);font-weight:900;line-height:var(--lh-tight);font-variant-numeric:tabular-nums}
+.count-card .unit{font-size:var(--fs-small);color:var(--text-secondary);font-weight:400}
+.count-card .date{font-size:var(--fs-caption);color:var(--text-muted)}
+.count-card.danger{border-color:var(--danger)}
+.count-card.danger .num{color:var(--danger)}
+.count-card .topbar{position:absolute;top:0;left:0;right:0;height:3px}
+.count-card.kaoyan .topbar{background:var(--kaoyan)}
+.count-card.line .topbar{background:var(--line)}
+.count-card.work .topbar{background:var(--work)}
+.count-card.gk .topbar{background:var(--gk)}
+.complete-card{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:var(--space-4)}
+.ring-wrap{position:relative;width:76px;height:76px;flex-shrink:0}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-wrap .ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:var(--fs-h3);font-weight:700}
+.complete-info{display:flex;flex-direction:column;gap:var(--space-1)}
+.complete-info .t{font-size:var(--fs-h3);font-weight:700}
+.complete-info .s{font-size:var(--fs-small);color:var(--text-secondary)}
+
+/* ============ 主体布局 ============ */
+.main-layout{
+  display:grid;grid-template-columns:1.35fr 1fr;
+  gap:var(--space-5);margin-top:var(--space-5);align-items:start;
+}
+.card{
+  background:var(--bg-surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:var(--space-5);
+  box-shadow:var(--shadow-sm);
+}
+.card + .card{margin-top:var(--space-5)}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4);gap:var(--space-3)}
+.card-head h2{font-size:var(--fs-h2);font-weight:700;line-height:var(--lh-tight);letter-spacing:-.01em}
+.card-head .hint{font-size:var(--fs-small);color:var(--text-muted)}
+
+/* ============ ③ 今日任务 ============ */
+.today-dayline{
+  display:flex;align-items:center;gap:var(--space-3);
+  padding:var(--space-3) var(--space-4);
+  background:var(--bg-subtle);border-radius:var(--radius-sm);
+  margin-bottom:var(--space-4);
+}
+.today-dayline .d{font-size:var(--fs-h3);font-weight:700}
+.today-dayline .p{font-size:var(--fs-small);color:var(--text-secondary)}
+.transition-banner{
+  padding:var(--space-3) var(--space-4);
+  background:var(--bg-subtle);border-left:4px solid var(--work);
+  border-radius:var(--radius-sm);margin-bottom:var(--space-4);
+  font-size:var(--fs-small);color:var(--text-secondary);line-height:1.6;
+}
+.transition-banner b{color:var(--work);font-weight:700}
+.book-guide{
+  padding:var(--space-3) var(--space-4);
+  background:var(--bg-subtle);border-left:4px solid var(--kaoyan);
+  border-radius:var(--radius-sm);margin-bottom:var(--space-4);
+}
+.book-guide .bg-title{font-size:var(--fs-small);font-weight:700;color:var(--kaoyan);margin-bottom:var(--space-2)}
+.book-guide .bg-item{font-size:var(--fs-caption);color:var(--text-secondary);line-height:1.7;padding-left:var(--space-3);position:relative}
+.book-guide .bg-item::before{content:'';position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--kaoyan)}
+.book-guide .bg-item b{color:var(--text-secondary);font-weight:700}
+.book-guide .bg-item .bk{color:var(--kaoyan);font-weight:700}
+.task-group{margin-bottom:var(--space-5)}
+.task-group:last-child{margin-bottom:0}
+.task-group .g-title{
+  display:flex;align-items:center;gap:var(--space-2);
+  font-size:var(--fs-h3);font-weight:700;margin-bottom:var(--space-3);
+}
+.task-group .g-title .tag{font-size:var(--fs-caption);font-weight:500;padding:2px 8px;border-radius:4px}
+.task-group.main .g-title{color:var(--kaoyan)}
+.task-group.main .g-title .tag{background:var(--kaoyan);color:var(--text-invert)}
+.task-group.side .g-title{color:var(--text-secondary)}
+.task-group.side .g-title .tag{background:var(--bg-inset);color:var(--text-secondary)}
+.task-item{
+  display:flex;align-items:center;gap:var(--space-3);
+  padding:var(--space-3) var(--space-3);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  margin-bottom:var(--space-2);cursor:pointer;
+  transition:background .15s ease,border-color .15s ease;
+}
+.task-item:hover{background:var(--bg-subtle);border-color:var(--border-strong)}
+.task-item input[type=checkbox]{display:none}
+.task-item .box{
+  width:20px;height:20px;border:2px solid var(--border-strong);border-radius:5px;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  transition:all .15s ease;
+}
+.task-item input:checked + .box{background:var(--success);border-color:var(--success)}
+.task-item input:checked + .box::after{content:'';width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.task-item .tt{flex:1;font-size:var(--fs-body)}
+.task-item .tt .tt-main{font-weight:500}
+.task-item .tt .tt-sub{font-size:var(--fs-small);color:var(--text-muted)}
+.task-item .tm{font-size:var(--fs-small);color:var(--text-secondary);font-variant-numeric:tabular-nums;white-space:nowrap}
+.task-item .dir{font-size:var(--fs-caption);padding:2px 6px;border-radius:4px;font-weight:500}
+.dir.kaoyan{background:var(--kaoyan-soft);color:var(--kaoyan)}
+.dir.line{background:var(--line-soft);color:var(--line)}
+.dir.work{background:var(--work-soft);color:var(--work)}
+.dir.gk{background:var(--gk-soft);color:var(--gk)}
+.task-item.done{opacity:.55}
+.task-item.done .tt{text-decoration:line-through;color:var(--text-secondary)}
+
+/* ============ ④ 本周时间分配 ============ */
+.week-table{width:100%;border-collapse:collapse;font-size:var(--fs-small)}
+.week-table th,.week-table td{padding:var(--space-2) var(--space-3);text-align:left;border-bottom:1px solid var(--border)}
+.week-table th{color:var(--text-secondary);font-weight:500;background:var(--bg-subtle)}
+.week-table td:first-child{font-weight:500}
+.week-table .bar-cell{min-width:90px}
+.week-bar{height:6px;background:var(--bg-inset);border-radius:3px;overflow:hidden}
+.week-bar i{display:block;height:100%;border-radius:3px}
+.week-legend{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-3);font-size:var(--fs-caption);color:var(--text-secondary)}
+.week-legend .lg{display:inline-flex;align-items:center;gap:6px}
+.week-legend .sw{width:10px;height:10px;border-radius:2px}
+
+/* ============ ⑤ 阶段目标 ============ */
+.goal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-4)}
+.goal-col{border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--space-4)}
+.goal-col .gc-title{font-size:var(--fs-h3);font-weight:700;margin-bottom:var(--space-3);display:flex;align-items:center;gap:var(--space-2)}
+.goal-col.kaoyan .gc-title{color:var(--kaoyan)}
+.goal-col.line .gc-title{color:var(--line)}
+.goal-col.work .gc-title{color:var(--work)}
+.goal-col.gk .gc-title{color:var(--gk)}
+.goal-col.kaoyan{border-top:3px solid var(--kaoyan)}
+.goal-col.line{border-top:3px solid var(--line)}
+.goal-col.work{border-top:3px solid var(--work)}
+.goal-col.gk{border-top:3px solid var(--gk)}
+.goal-item{display:flex;align-items:flex-start;gap:var(--space-2);padding:var(--space-2) 0;cursor:pointer;font-size:var(--fs-small)}
+.goal-item .gbox{width:16px;height:16px;border:2px solid var(--border-strong);border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center}
+.goal-item.checked .gbox{background:var(--success);border-color:var(--success)}
+.goal-item.checked .gbox::after{content:'';width:8px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.goal-item.checked span{color:var(--text-muted);text-decoration:line-through}
+.goal-item input{display:none}
+
+/* ============ ⑥ 关键决策时间轴（水平时间线 + 上下交错） ============ */
+.timeline{margin-top:var(--space-5)}
+.tl-progress{margin-bottom:var(--space-5)}
+.tl-progress-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-2)}
+.tl-progress-head .t{font-size:var(--fs-small);font-weight:700;color:var(--text-secondary)}
+.tl-progress-head .count{font-size:var(--fs-caption);color:var(--text-muted);font-variant-numeric:tabular-nums}
+.tl-bar{height:8px;background:var(--bg-inset);border-radius:999px;overflow:hidden}
+.tl-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--kaoyan),var(--success));border-radius:999px;transition:width .6s ease}
+.tl-rail{position:relative;padding:var(--space-6) var(--space-2) 0;margin-top:var(--space-4);height:200px}
+/* 可点击时间段（横轴拆成多段） */
+.tl-segments{position:absolute;left:0;right:0;top:88px;display:flex;height:22px;gap:3px;z-index:1}
+.tl-seg{
+  position:absolute;height:100%;cursor:pointer;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;letter-spacing:.02em;
+  transition:transform .15s ease,box-shadow .15s ease;
+  border:1px solid transparent;overflow:hidden;white-space:nowrap;
+}
+.tl-seg:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--bg-surface)}
+.tl-seg.active{outline:2px solid var(--kaoyan);outline-offset:2px;z-index:3}
+.tl-seg .seg-icon{position:absolute;top:2px;right:4px;font-size:10px;opacity:.85}
+.tl-seg.c1{background:linear-gradient(135deg,#2E5D43,#1F3D2B)}
+.tl-seg.c2{background:linear-gradient(135deg,#3A6B8C,#2B4C7E)}
+.tl-seg.c3{background:linear-gradient(135deg,#7A6A9C,#5A5B8A)}
+.tl-seg.c4{background:linear-gradient(135deg,#B04A30,#B8422E)}
+.tl-seg.c5{background:linear-gradient(135deg,#6B4F8F,#4E3D75)}
+.tl-line{position:absolute;left:0;right:0;top:99px;height:3px;background:var(--border-strong);border-radius:2px;pointer-events:none}
+.tl-line::after{content:'';position:absolute;top:-2px;right:-2px;width:7px;height:7px;border-radius:50%;background:var(--kaoyan)}
+.tl-grid{position:absolute;inset:0;pointer-events:none}
+.tl-node{pointer-events:auto}
+.tl-grid .tl-label{font-size:var(--fs-caption);color:var(--text-muted);white-space:nowrap;position:absolute;bottom:-20px;transform:translateX(-50%)}
+/* 时间段展开面板（就地展开） */
+.tl-panel{
+  margin-top:var(--space-3);border:1px solid var(--border);border-radius:var(--radius-md);
+  background:var(--bg-surface);box-shadow:var(--shadow-md);overflow:hidden;
+}
+.tl-panel-head{display:flex;justify-content:space-between;align-items:center;padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--border);background:var(--bg-subtle)}
+.tl-panel-head .t{font-size:var(--fs-body);font-weight:700}
+.tl-panel-head .s{font-size:var(--fs-caption);color:var(--text-muted);margin-top:2px}
+.tl-panel-head .close{cursor:pointer;font-size:var(--fs-small);color:var(--text-muted);padding:4px 8px;border-radius:4px}
+.tl-panel-head .close:hover{background:var(--bg-inset);color:var(--text-primary)}
+.tl-panel-body{padding:var(--space-3) var(--space-4)}
+.tl-panel-body .sec-title{font-size:var(--fs-small);font-weight:700;color:var(--text-secondary);margin:var(--space-3) 0 var(--space-2)}
+.tl-panel-body .sec-title:first-child{margin-top:0}
+.tl-plist{list-style:none;display:flex;flex-direction:column;gap:var(--space-1)}
+.tl-plist li{display:flex;align-items:flex-start;gap:var(--space-2);font-size:var(--fs-small);line-height:var(--lh-normal);cursor:pointer}
+.tl-plist .pbox{width:16px;height:16px;border:2px solid var(--border-strong);border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center}
+.tl-plist li.checked .pbox{background:var(--success);border-color:var(--success)}
+.tl-plist li.checked .pbox::after{content:'';width:8px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.tl-plist li.checked span{color:var(--text-muted);text-decoration:line-through}
+.tl-panel-body .phint{font-size:var(--fs-caption);color:var(--text-muted);font-style:italic;margin-top:var(--space-2)}
+.tl-node{
+  position:absolute;top:92px;left:0;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;
+}
+.tl-node .dot{
+  width:14px;height:14px;border-radius:50%;
+  background:var(--bg-surface);border:3px solid var(--kaoyan);
+  position:relative;z-index:2;transition:all .3s ease;flex-shrink:0;
+}
+.tl-node.now .dot{border-color:var(--kaoyan);background:var(--kaoyan);box-shadow:0 0 0 5px var(--kaoyan-soft);animation:pulse 2s infinite}
+.tl-node.done .dot{border-color:var(--border-strong);background:var(--border-strong)}
+.tl-node.done .dot::after{content:'✓';position:absolute;inset:-4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px var(--kaoyan-soft)}50%{box-shadow:0 0 0 9px rgba(31,61,43,.12)}}
+/* 节点上下交错：odd 在上，even 在下 */
+.tl-node .tl-card{
+  position:absolute;width:180px;left:50%;transform:translateX(-50%);
+  background:var(--bg-surface);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:var(--space-3);
+  box-shadow:var(--shadow-sm);
+  transition:all .3s ease;
+}
+.tl-node:nth-child(odd) .tl-card{bottom:calc(100% + 12px)}
+.tl-node:nth-child(odd) .tl-card::after{content:'';position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:6px solid var(--border)}
+.tl-node:nth-child(even) .tl-card{top:calc(100% + 12px)}
+.tl-node:nth-child(even) .tl-card::after{content:'';position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:6px solid var(--border)}
+.tl-node .tl-connect{position:absolute;left:50%;width:2px;background:var(--border-strong)}
+.tl-node:nth-child(odd) .tl-connect{top:0;height:12px}
+.tl-node:nth-child(even) .tl-connect{top:100%;height:12px}
+.tl-card .tc-date{font-size:11px;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.tl-card .tc-ev{font-size:var(--fs-small);font-weight:700;margin-top:var(--space-1);line-height:var(--lh-tight)}
+.tl-card .tc-type{display:inline-block;font-size:11px;padding:2px 6px;border-radius:4px;margin-top:var(--space-2)}
+.tl-node .tl-card .tc-check{position:absolute;top:var(--space-2);right:var(--space-2);width:18px;height:18px;border:2px solid var(--border-strong);border-radius:4px;cursor:pointer;background:var(--bg-surface);display:flex;align-items:center;justify-content:center;transition:all .2s ease}
+.tl-node .tl-card .tc-check:hover{border-color:var(--kaoyan)}
+.tl-node .tl-card .tc-check.checked{background:var(--success);border-color:var(--success)}
+.tl-node .tl-card .tc-check.checked::after{content:'';width:8px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.tl-node.done .tl-card{background:var(--bg-subtle);border-color:var(--border);opacity:.75}
+.tl-node.done .tl-card .tc-ev{color:var(--text-muted)}
+.tl-node.done .tl-card .tc-type{background:var(--bg-inset);color:var(--text-muted)}
+.tl-node.now .tl-card{border-color:var(--kaoyan);background:var(--kaoyan-soft)}
+.tl-node.now .tl-card .tc-type{background:var(--kaoyan);color:#fff}
+.tl-node.warn .tl-card .tc-type{background:var(--danger-soft);color:var(--danger)}
+.tl-node.normal .tl-card .tc-type{background:var(--bg-inset);color:var(--text-secondary)}
+@media (max-width:720px){
+  .tl-node .tl-card{width:140px;font-size:12px}
+  .tl-rail{overflow-x:auto;padding-bottom:var(--space-4)}
+  .tl-grid{min-width:760px}
+}
+
+/* ============ ⑦ 院校 + 待办 ============ */
+.bottom-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:var(--space-5);margin-top:var(--space-5)}
+.school-table{width:100%;border-collapse:collapse;font-size:var(--fs-small)}
+.school-table th,.school-table td{padding:var(--space-3);border-bottom:1px solid var(--border);text-align:left}
+.school-table th{color:var(--text-secondary);font-weight:500;background:var(--bg-subtle)}
+.badge-tier{display:inline-block;padding:2px 8px;border-radius:4px;font-size:var(--fs-caption);font-weight:700}
+.tier-chong{background:var(--danger-soft);color:var(--danger)}
+.tier-wen{background:var(--work-soft);color:var(--work)}
+.tier-bao{background:var(--success-soft);color:var(--success)}
+.todo-item{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:var(--space-2)}
+.todo-item .todo-urgent{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.todo-item .todo-urgent.hi{background:var(--danger)}
+.todo-item .todo-urgent.mid{background:var(--work)}
+.todo-item .todo-urgent.low{background:var(--success)}
+.todo-item .todo-body{flex:1}
+.todo-item .todo-t{font-weight:500;font-size:var(--fs-body)}
+.todo-item .todo-s{font-size:var(--fs-small);color:var(--text-muted)}
+.todo-item .todo-d{font-size:var(--fs-caption);color:var(--text-secondary);white-space:nowrap}
+
+/* ============ 页脚 ============ */
+.footer{margin-top:var(--space-6);text-align:center;font-size:var(--fs-caption);color:var(--text-muted);line-height:var(--lh-loose)}
+.footer .sync-note{padding:var(--space-3) var(--space-4);background:var(--bg-subtle);border-radius:var(--radius-sm);display:inline-block;max-width:640px}
+
+/* ============ 响应式 ============ */
+@media (max-width:920px){
+  .main-layout{grid-template-columns:1fr}
+  .bottom-grid{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  body{padding:var(--space-3) 0 var(--space-6)}
+  .container{padding:0 var(--space-3)}
+  .masthead{padding:var(--space-4)}
+  .masthead h1{font-size:var(--fs-h2)}
+  .countdown-grid{grid-template-columns:repeat(2,1fr);gap:var(--space-3)}
+  .count-card{padding:var(--space-3) var(--space-4)}
+  .card{padding:var(--space-4)}
+  .goal-grid{grid-template-columns:1fr}
+  :root{--fs-stat:30px}
+  /* 倒计时长文字不破碎 */
+  .count-card .date{font-size:11px;line-height:var(--lh-tight);word-break:break-word}
+  .count-card .label{font-size:var(--fs-caption)}
+
+  /* 手机端表格 → 卡片式布局 */
+  .week-table thead,.school-table thead{display:none}
+  .week-table,.school-table{display:block;width:100%}
+  .week-table tbody,.school-table tbody{display:block}
+  .week-table tr,.school-table tr{
+    display:block;background:var(--bg-surface);
+    border:1px solid var(--border);border-radius:var(--radius-md);
+    padding:var(--space-3);margin-bottom:var(--space-3);
+  }
+  .week-table td,.school-table td{
+    display:flex;justify-content:space-between;align-items:center;gap:var(--space-3);
+    padding:var(--space-2) 0;border-bottom:1px dashed var(--border);text-align:left;
+  }
+  .week-table td:last-child,.school-table td:last-child{border-bottom:none}
+  .week-table td::before,.school-table td::before{
+    content:attr(data-label);color:var(--text-muted);font-size:var(--fs-caption);
+    flex-shrink:0;font-weight:500;
+  }
+  .week-table td:first-child::before,
+  .school-table td:first-child::before{display:none}
+  .week-table td:first-child{font-weight:700;font-size:var(--fs-body);justify-content:flex-start;padding-top:var(--space-1)}
+  .school-table tr:first-child td:first-child{justify-content:flex-start;padding-bottom:var(--space-1)}
+  .week-table .bar-cell{min-width:0;display:block;padding:var(--space-2) 0 var(--space-1)}
+  .week-table .bar-cell .week-bar{margin-top:4px}
+  .school-table td .badge-tier{font-size:var(--fs-caption)}
+  .school-table td:nth-child(2){font-weight:700}
+  /* 院校卡片：首行显示档位徽章 */
+  .school-table tr td:first-child{justify-content:flex-start}
+  .school-table tr td:first-child::before{content:'';display:none}
+
+  /* 时间轴滑动提示（仅移动端） */
+  .tl-swipe-hint{display:block;text-align:center;font-size:var(--fs-caption);color:var(--text-muted);margin-top:var(--space-2);letter-spacing:.05em}
+}
+.tl-swipe-hint{display:none}
+@media (max-width:640px){.tl-swipe-hint{display:block}}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ① 顶部状态条 -->
+  <header class="masthead">
+    <div class="brand">
+      <h1>学习工作台</h1>
+      <div class="sub">考研主攻 · 实习考公留后路 · 冲稳保体系</div>
+    </div>
+    <div class="meta">
+      <span class="pill badge"><span class="dot"></span><span id="todayLabel">--</span></span>
+      <span class="pill badge"><span class="dot"></span><span id="phaseLabel">--</span></span>
+      <span class="pill strategy">考研主攻 70%</span>
+      <span class="pill sync-btn export" id="exportBtn" title="导出打卡数据为文件（用于手动同步其他设备）">导出数据</span>
+      <span class="pill sync-btn import" id="importBtn" title="从文件导入打卡数据">导入数据</span>
+      <input type="file" id="syncFileInput" accept=".json">
+    </div>
+  </header>
+
+  <!-- ② 倒计时 + 今日完成度 -->
+  <section class="countdown-grid">
+    <div class="count-card kaoyan danger"><div class="topbar"></div><span class="label">软考·信息安全工程师</span><div><span class="num" id="cd-ruankao">--</span><span class="unit"> 天</span></div><span class="date">2026-10-24 · 江西吉安 · 机考</span></div>
+    <div class="count-card line"><div class="topbar"></div><span class="label">六级笔试</span><div><span class="num" id="cd-cet">--</span><span class="unit"> 天</span></div><span class="date">2026-12-12 · 目标 500+</span></div>
+    <div class="count-card work"><div class="topbar"></div><span class="label">考研第一次定档</span><div><span class="num" id="cd-dingdang">--</span><span class="unit"> 天</span></div><span class="date">2027-02 · 按数学成绩定冲稳保</span></div>
+    <div class="count-card gk"><div class="topbar"></div><span class="label">考研初试</span><div><span class="num" id="cd-chushi">--</span><span class="unit"> 天</span></div><span class="date">2027-12 下旬 · 报名 2027-10</span></div>
+    <div class="count-card complete-card">
+      <div class="complete-info">
+        <span class="t" id="todayCompleteText">今日主线完成</span>
+        <span class="s" id="todayCompleteSub">勾选主线任务自动更新</span>
+      </div>
+      <div class="ring-wrap">
+        <svg width="76" height="76" viewBox="0 0 76 76">
+          <circle cx="38" cy="38" r="33" fill="none" stroke="var(--bg-inset)" stroke-width="7"></circle>
+          <circle id="ringFg" cx="38" cy="38" r="33" fill="none" stroke="var(--success)" stroke-width="7" stroke-linecap="round" stroke-dasharray="207.3" stroke-dashoffset="207.3"></circle>
+        </svg>
+        <div class="ring-num" id="ringNum">0%</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 主体：③ 今日任务 + ④ 本周时间分配 -->
+  <section class="main-layout">
+    <div class="card">
+      <div class="card-head">
+        <h2>今日任务</h2>
+        <span class="hint">主线必做 · 支线选做 · 自动保存</span>
+      </div>
+      <div class="today-dayline">
+        <span class="d" id="dayLineDay">--</span>
+        <span class="p" id="dayLinePhase">--</span>
+      </div>
+      <div id="transitionBanner" class="transition-banner" style="display:none"></div>
+      <div id="bookGuide" class="book-guide" style="display:none"></div>
+      <div id="todayTasks"></div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-head">
+          <h2>本周时间分配</h2>
+          <span class="hint" id="weekPlanLabel">--</span>
+        </div>
+        <table class="week-table">
+          <thead><tr><th>任务</th><th>时长</th><th>占比</th></tr></thead>
+          <tbody id="weekRows"></tbody>
+        </table>
+        <div class="week-legend" id="weekLegend"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑤ 当前阶段目标 -->
+  <section class="card" style="margin-top:var(--space-5)">
+    <div class="card-head">
+      <h2>当前阶段目标 · 大三上</h2>
+      <span class="hint">2026.09 – 2027.01 · 勾选自动保存</span>
+    </div>
+    <div class="goal-grid" id="goalGrid"></div>
+  </section>
+
+  <!-- ⑥ 关键决策时间轴 -->
+  <section class="timeline">
+    <div class="card-head" style="margin-bottom:var(--space-4)">
+      <h2>关键决策时间轴</h2>
+      <span class="hint">上下交错 · 勾选即完成（变灰）· 自动保存</span>
+    </div>
+    <div class="tl-progress">
+      <div class="tl-progress-head"><span class="t" id="tlProgressLabel">整体进度</span><span class="count" id="tlProgressCount">0 / 7</span></div>
+      <div class="tl-bar"><i id="tlProgressFill"></i></div>
+    </div>
+    <div class="tl-rail">
+      <div class="tl-segments" id="tlSegments"></div>
+      <div class="tl-line"></div>
+      <div class="tl-grid" id="timeline"></div>
+    </div>
+    <div class="tl-swipe-hint">← 左右滑动查看完整时间轴 →</div>
+    <div id="tlPanel"></div>
+  </section>
+
+  <!-- ⑦ 院校 + 近期待办 -->
+  <section class="bottom-grid">
+    <div class="card" style="margin-top:0">
+      <div class="card-head"><h2>冲稳保院校</h2><span class="hint">统一 11408 备考 · 2027.10 定档</span></div>
+      <table class="school-table">
+        <thead><tr><th>档位</th><th>院校</th><th>专业</th><th>科目</th><th>学费/年</th></tr></thead>
+        <tbody id="schoolRows"></tbody>
+      </table>
+    </div>
+    <div class="card" style="margin-top:0">
+      <div class="card-head"><h2>近期待办</h2><span class="hint">按紧迫程度</span></div>
+      <div id="todoList"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="sync-note">数据基于学习规划文档快照（2026-09-01 v11 考研主攻版）。文档更新后请告知同步，倒计时与今日任务按日期自动切换。</div>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   数据层（基于学习规划文档快照 2026-09-01）
+   ============================================================ */
+const DATA = {
+  // 关键时间节点
+  deadlines:{
+    ruankao:{label:'软考信安',date:'2026-10-24'},
+    cet:{label:'六级',date:'2026-12-12'},
+    dingdang:{label:'定档',date:'2027-02-01'},
+    chushi:{label:'初试',date:'2027-12-25'}
+  },
+  // 阶段定义（软考期 / 软考后 / 期末）
+  phases:[
+    {id:'soft',name:'软考备考期',start:'2026-09-01',end:'2026-10-27'},
+    {id:'post',name:'六级冲刺·考研发力期',start:'2026-10-28',end:'2026-12-12'},
+    {id:'final',name:'期末复习·评估期',start:'2026-12-13',end:'2027-01-31'}
+  ],
+  // 周计划（按阶段）
+  weekPlan:{
+    soft:[
+      {task:'软考信息安全工程师',hours:'10-14h',pct:34,color:'var(--kaoyan)',main:true},
+      {task:'数学一（考研主攻）',hours:'8-10h',pct:24,color:'var(--line)',main:true},
+      {task:'408（数据结构核心）',hours:'4-5h',pct:12,color:'var(--gk)',main:true},
+      {task:'六级英语',hours:'5h',pct:13,color:'var(--line-soft)',main:false},
+      {task:'V3 网安（辅助）',hours:'2-3h',pct:7,color:'var(--work)',main:false},
+      {task:'实习（后路）',hours:'3-5h',pct:9,color:'var(--work-soft)',main:false},
+      {task:'考公试探',hours:'0.5h',pct:1,color:'var(--gk-soft)',main:false}
+    ],
+    post:[
+      {task:'数学一（考研主攻）',hours:'12-15h',pct:36,color:'var(--kaoyan)',main:true},
+      {task:'408（数据结构核心）',hours:'8-10h',pct:25,color:'var(--line)',main:true},
+      {task:'英语（六级+考研英一）',hours:'6h',pct:16,color:'var(--gk)',main:true},
+      {task:'V3 网安（辅助）',hours:'2-3h',pct:7,color:'var(--work)',main:false},
+      {task:'实习（后路）',hours:'3-5h',pct:10,color:'var(--work-soft)',main:false},
+      {task:'考公试探',hours:'0.5h',pct:1,color:'var(--gk-soft)',main:false}
+    ],
+    final:[
+      {task:'期末复习（绩点优先）',hours:'15-20h',pct:60,color:'var(--kaoyan)',main:true},
+      {task:'数学一（保持手感）',hours:'3-5h',pct:15,color:'var(--line)',main:true},
+      {task:'408（保持手感）',hours:'2-3h',pct:10,color:'var(--gk)',main:true},
+      {task:'实习/V3（最低限度）',hours:'2-3h',pct:10,color:'var(--work-soft)',main:false}
+    ]
+  },
+  // 今日任务模板：key = 周几(0-6)，value = 每阶段的任务列表
+  dayTasks:{
+    // 周一
+    '1':{
+      soft:[
+        {m:'course',t:'课前背单词/听力磨耳朵',s:'8:00-10:00',d:'英语',dir:'line'},
+        {m:'course',t:'上课：现代密码学 + 网络攻防',s:'白天',d:'课程·软考同源',dir:'kaoyan'},
+        {m:'soft',t:'软考 1h（章节学习/刷题）',s:'20:00-21:00',d:'软考',dir:'kaoyan'},
+        {m:'math',t:'数学一刷题 0.5-1h',s:'19:00-20:00',d:'考研',dir:'line'}
+      ],
+      post:[
+        {m:'course',t:'课前背单词/听力磨耳朵',s:'8:00-10:00',d:'英语',dir:'line'},
+        {m:'course',t:'上课：现代密码学 + 网络攻防',s:'白天',d:'课程·408同源',dir:'kaoyan'},
+        {m:'math',t:'数学一刷题 1h',s:'19:00-20:00',d:'考研',dir:'line'},
+        {m:'408',t:'408 复习 1h（数据结构）',s:'20:00-21:00',d:'考研',dir:'kaoyan'}
+      ],
+      final:[
+        {m:'course',t:'上课：现代密码学 + 网络攻防',s:'白天',d:'期末课程',dir:'kaoyan'},
+        {m:'exam',t:'期末复习 2h',s:'19:00-21:00',d:'绩点优先',dir:'kaoyan'},
+        {m:'math',t:'数学一保持手感 0.5h',s:'21:00-21:30',d:'考研',dir:'line'}
+      ]
+    },
+    // 周二
+    '2':{
+      soft:[
+        {m:'course',t:'课前背单词/听力磨耳朵',s:'8:00-10:00',d:'英语',dir:'line'},
+        {m:'course',t:'上课：自然语言处理 + 计算机英语',s:'白天',d:'课程',dir:'line'},
+        {m:'soft',t:'软考 1h（重点章节）',s:'20:00-21:00',d:'软考',dir:'kaoyan'},
+        {m:'eng',t:'英语阅读 1h（六级真题）',s:'19:00-20:00',d:'英语',dir:'line'}
+      ],
+      post:[
+        {m:'course',t:'课前背单词/听力磨耳朵',s:'8:00-10:00',d:'英语',dir:'line'},
+        {m:'course',t:'上课：自然语言处理 + 计算机英语',s:'白天',d:'课程',dir:'line'},
+        {m:'eng',t:'英语阅读 1h（考研英一）',s:'19:00-20:00',d:'英语',dir:'line'},
+        {m:'math',t:'数学一刷题 1h',s:'20:00-21:00',d:'考研',dir:'line'}
+      ],
+      final:[
+        {m:'course',t:'上课：自然语言处理 + 计算机英语',s:'白天',d:'期末课程',dir:'line'},
+        {m:'exam',t:'期末复习 2h',s:'19:00-21:00',d:'绩点优先',dir:'kaoyan'}
+      ]
+    },
+    // 周三（空余日·数学+软考+408）
+    '3':{
+      soft:[
+        {m:'math',t:'数学一 3h（高数基础·看课刷题）',s:'8:30-11:30',d:'考研',dir:'line'},
+        {m:'soft',t:'软考 2h（密码学/防火墙/等保）',s:'14:00-16:00',d:'软考',dir:'kaoyan'},
+        {m:'408',t:'408 1h（数据结构）',s:'16:00-17:00',d:'考研',dir:'kaoyan'},
+        {m:'side',t:'V3 网安 0.5h + 健身 1h',s:'17:00-18:00',d:'支线',dir:'work'},
+        {m:'eng',t:'六级听力精听 1.5h',s:'19:30-21:00',d:'英语',dir:'line'},
+        {m:'soft',t:'软考 1h（刷题/背知识点）',s:'21:00-22:00',d:'软考',dir:'kaoyan'}
+      ],
+      post:[
+        {m:'math',t:'数学一 3h',s:'8:30-11:30',d:'考研',dir:'line'},
+        {m:'408',t:'408 2h（数据结构核心）',s:'14:00-16:00',d:'考研',dir:'kaoyan'},
+        {m:'eng',t:'英语 1.5h（阅读/精听）',s:'16:00-17:30',d:'英语',dir:'line'},
+        {m:'side',t:'V3 网安 0.5h + 健身 1h',s:'17:30-18:30',d:'支线',dir:'work'},
+        {m:'math',t:'数学刷题/错题 2h',s:'19:30-21:30',d:'考研',dir:'line'}
+      ],
+      final:[
+        {m:'exam',t:'期末复习 4h（专业核心课）',s:'8:30-12:30',d:'绩点优先',dir:'kaoyan'},
+        {m:'exam',t:'期末复习 3h',s:'14:00-17:00',d:'绩点优先',dir:'kaoyan'},
+        {m:'side',t:'健身 1h',s:'17:00-18:00',d:'支线',dir:'work'},
+        {m:'math',t:'数学一保持手感 1h',s:'19:30-20:30',d:'考研',dir:'line'}
+      ]
+    },
+    // 周四（空余日·数学+软考+实习）
+    '4':{
+      soft:[
+        {m:'math',t:'数学一 3h',s:'8:30-11:30',d:'考研',dir:'line'},
+        {m:'soft',t:'软考 2h',s:'14:00-16:00',d:'软考',dir:'kaoyan'},
+        {m:'408',t:'408 1h',s:'16:00-17:00',d:'考研',dir:'kaoyan'},
+        {m:'side',t:'实习 1h（全栈实战）',s:'17:00-18:00',d:'支线·后路',dir:'work'}
+      ],
+      post:[
+        {m:'math',t:'数学一 3h',s:'8:30-11:30',d:'考研',dir:'line'},
+        {m:'408',t:'408 2h',s:'14:00-16:00',d:'考研',dir:'kaoyan'},
+        {m:'eng',t:'英语 1h',s:'16:00-17:00',d:'英语',dir:'line'},
+        {m:'side',t:'实习 1h（全栈实战）',s:'17:00-18:00',d:'支线·后路',dir:'work'}
+      ],
+      final:[
+        {m:'exam',t:'期末复习 4h',s:'8:30-12:30',d:'绩点优先',dir:'kaoyan'},
+        {m:'exam',t:'期末复习 2h',s:'14:00-16:00',d:'绩点优先',dir:'kaoyan'},
+        {m:'side',t:'实习 1h',s:'16:00-17:00',d:'支线',dir:'work'}
+      ]
+    },
+    // 周五（空余日·数学+软考+实习）
+    '5':{
+      soft:[
+        {m:'math',t:'数学一 3h',s:'8:30-11:30',d:'考研',dir:'line'},
+        {m:'soft',t:'软考 2h',s:'14:00-16:00',d:'软考',dir:'kaoyan'},
+        {m:'eng',t:'六级 1h（套题/写译）',s:'16:00-17:00',d:'英语',dir:'line'},
+        {m:'side',t:'实习 1-2h + V3 0.5h',s:'19:00-20:00',d:'支线·后路',dir:'work'},
+        {m:'soft',t:'软考 1h（考公试探 2周1次）',s:'20:00-21:00',d:'软考',dir:'kaoyan'}
+      ],
+      post:[
+        {m:'math',t:'数学一 3h',s:'8:30-11:30',d:'考研',dir:'line'},
+        {m:'408',t:'408 2h',s:'14:00-16:00',d:'考研',dir:'kaoyan'},
+        {m:'eng',t:'英语 1h',s:'16:00-17:00',d:'英语',dir:'line'},
+        {m:'side',t:'实习 1-2h + V3 0.5h',s:'19:00-20:00',d:'支线·后路',dir:'work'},
+        {m:'math',t:'数学 1h',s:'20:00-21:00',d:'考研',dir:'line'}
+      ],
+      final:[
+        {m:'exam',t:'期末复习 4h',s:'8:30-12:30',d:'绩点优先',dir:'kaoyan'},
+        {m:'exam',t:'期末复习 2h',s:'14:00-16:00',d:'绩点优先',dir:'kaoyan'},
+        {m:'side',t:'实习 1h',s:'16:00-17:00',d:'支线',dir:'work'}
+      ]
+    },
+    // 周六
+    '6':{
+      soft:[
+        {m:'math',t:'数学一 3h',s:'上午',d:'考研',dir:'line'},
+        {m:'side',t:'实习 2h（全栈实战）',s:'下午',d:'支线·后路',dir:'work'},
+        {m:'soft',t:'软考 2h',s:'下午/晚上',d:'软考',dir:'kaoyan'}
+      ],
+      post:[
+        {m:'math',t:'数学一 3h',s:'上午',d:'考研',dir:'line'},
+        {m:'side',t:'实习 2h（全栈实战）',s:'下午',d:'支线·后路',dir:'work'},
+        {m:'408',t:'408 2h',s:'下午/晚上',d:'考研',dir:'kaoyan'}
+      ],
+      final:[
+        {m:'exam',t:'期末复习 3h',s:'上午',d:'绩点优先',dir:'kaoyan'},
+        {m:'exam',t:'期末复习 2h',s:'下午',d:'绩点优先',dir:'kaoyan'}
+      ]
+    },
+    // 周日
+    '0':{
+      soft:[
+        {m:'eng',t:'六级 2h',s:'上午',d:'英语',dir:'line'},
+        {m:'408',t:'408 1.5h',s:'下午',d:'考研',dir:'kaoyan'},
+        {m:'side',t:'V3 网安 1.5h',s:'下午',d:'支线',dir:'work'},
+        {m:'soft',t:'软考 2h',s:'下午/晚上',d:'软考',dir:'kaoyan'}
+      ],
+      post:[
+        {m:'eng',t:'英语 2h',s:'上午',d:'英语',dir:'line'},
+        {m:'408',t:'408 2h',s:'下午',d:'考研',dir:'kaoyan'},
+        {m:'side',t:'V3 网安 1h',s:'下午',d:'支线',dir:'work'},
+        {m:'math',t:'数学 2h（查漏补缺）',s:'下午/晚上',d:'考研',dir:'line'}
+      ],
+      final:[
+        {m:'exam',t:'期末复习 3h',s:'上午',d:'绩点优先',dir:'kaoyan'},
+        {m:'math',t:'数学一保持手感 1h',s:'下午',d:'考研',dir:'line'}
+      ]
+    }
+  },
+  // 阶段目标（四方向）
+  goals:{
+    kaoyan:{title:'考研（主攻）',items:[
+      '数学一：高数上册过完一遍，能做基础题',
+      '408：数据结构过完一轮（核心）',
+      '408：计算机网络过完一轮（和课程同步）',
+      '英语：六级 12 月冲 500+（为英一打底）',
+      '收集冲稳保院校信息'
+    ]},
+    line:{title:'六级/英语',items:[
+      '听力 123→150+（每天精听 30min）',
+      '写译 130→150+（每周 2 篇作文）',
+      '阅读 216 保持（每周 2-3 套真题）',
+      '11 月起每周一套完整真题计时'
+    ]},
+    work:{title:'就业·V3（辅助后路）',items:[
+      '软考信安两科过 45 分（10/24 考）',
+      'OWASP Top 10 学 6-7 个漏洞类型',
+      'Burp 熟练 + WriteUp 5+ 篇',
+      '实习 3-5h/周，保持简历记录',
+      'CTF 线上比赛 1 次'
+    ]},
+    gk:{title:'考公（最低试探）',items:[
+      '行测真题 1-2 套，了解题型',
+      '关注网安可报岗位信息',
+      '不系统备考（考研为主）'
+    ]}
+  },
+  // 关键决策时间轴（按时间段，节点上下交错）
+  // pos: 0-100 百分比位置（按时间比例）；type: warn高优 / now当前 / normal普通 / done完成
+  timelineNodes:[
+    {date:'2026-10-24',ev:'软考·信安考试',type:'now',phase:'软考期',pos:6},
+    {date:'2026-12-12',ev:'六级笔试 500+',type:'warn',phase:'六级期',pos:22},
+    {date:'2026-12 下旬',ev:'阶段评估',type:'normal',phase:'六级期',pos:30},
+    {date:'2027-02',ev:'第一次定档',type:'normal',phase:'寒假',pos:42},
+    {date:'2027-05',ev:'软考·网工(广东)',type:'normal',phase:'大三下',pos:58},
+    {date:'2027-06',ev:'最终定校',type:'normal',phase:'大三下',pos:66},
+    {date:'2027-12 下旬',ev:'考研初试',type:'normal',phase:'大四',pos:96}
+  ],
+  // 时间段（对齐真实决策节奏，pos=左起点%, w=宽度%，无缝铺满整条时间轴），点击展开细化目标
+  timelinePhases:[
+    {
+      id:'soft',label:'软考期',range:'2026.09-10.27',cls:'c1',pos:0,w:12,
+      goals:{
+        '考研':['数学一：高数上册过完一遍，能做基础题','408：数据结构+计网同步起步（与课程交叉）'],
+        '软考':['软考信安两科均过 45 分（10/24-27）','教材通读→章节练习→真题冲刺→模拟查漏'],
+        '六级':['听力精听 30min/天，5h/周'],
+        '后路':['V3 网安 2-3h/周（OWASP+Burp）','实习 3-5h/周保底','考公试探 0.5h/周（2周1套）']
+      }
+    },
+    {
+      id:'cet',label:'六级冲刺期',range:'2026.10.28-12.12',cls:'c2',pos:12,w:9,
+      goals:{
+        '考研':['数学一 12-15h/周（高数下开始）','408 8-10h/周（数据结构核心一轮）'],
+        '六级':['12/12 六级冲 500+（听力+写译主攻）','11 月起每周一套完整真题计时'],
+        '后路':['V3 网安 2-3h/周','实习 3-5h/周','考公试探 0.5h/周']
+      }
+    },
+    {
+      id:'final',label:'期末+定档',range:'2026.12.13-2027.02',cls:'c3',pos:21,w:16,
+      goals:{
+        '期末':['期末考试不挂科，保持绩点','现代密码学/网络攻防重点复习'],
+        '评估':['12 月下旬评估：数学完成度/六级/软考','2027.02 第一次定档（按数学成绩）'],
+        '考研':['数学保持手感 3-5h/周','408 保持手感 2-3h/周']
+      }
+    },
+    {
+      id:'next',label:'大三下',range:'2027.03-06',cls:'c4',pos:37,w:25,
+      goals:{
+        '考研':['数学：线代+概率论+高数下全部过完','408：OS+计组过完，四门基础全过','英一真题开始（阅读为主）'],
+        '定校':['2027.05 软考网工（广东）','2027.06 最终定校 + 学硕/专硕'],
+        '后路':['六级第二次 2027.06 保底','实习 3-5h/周维持','考驾照（暑期/大四）']
+      }
+    },
+    {
+      id:'sprint',label:'大四冲刺',range:'2027.07-12',cls:'c5',pos:62,w:38,
+      goals:{
+        '暑假':['数学强化+真题近15年','408 二轮+真题首刷','政治启动，英语真题精做'],
+        '冲刺':['9 月核对招生简章·终选院校','10 月报名定校（按数学定档）','11-12 真题二刷+模拟卷','12 月下旬考研初试'],
+        '后路':['秋招轻投 10-20 份保底','国考/省考可半裸考']
+      }
+    }
+  ],
+  // 冲稳保院校
+  schools:[
+    {tier:'冲',cls:'tier-chong',name:'深圳大学',major:'计科学硕/计算机专硕',subject:'11408（英一数一408）',fee:'学8000/专1-2.8万'},
+    {tier:'冲',cls:'tier-chong',name:'暨南大学',major:'网安学硕(083900)',subject:'11408（英一数一408）',fee:'8000'},
+    {tier:'稳',cls:'tier-wen',name:'广州大学',major:'网络与信息安全专硕(085412)',subject:'22408（英二数二408）',fee:'15000'},
+    {tier:'保',cls:'tier-bao',name:'广东外语外贸大学',major:'网安学硕(083900)',subject:'数一英一+846（自命题）',fee:'8000'}
+  ],
+  // 近期待办
+  todos:[
+    {u:'done',t:'软考已缴费（136元，审核通过）',s:'江西考区 · 非税支付',d:'已缴费 9/2'},
+    {u:'hi',t:'六级报名（广东省）',s:'CET 报名平台',d:'9/15 起'},
+    {u:'done',t:'软考教材已到货·开始通读',s:'《信息安全工程师教程》第2版 77元 + 真题模考卷',d:'已到货 9/2'},
+    {u:'mid',t:'软考准考证打印',s:'bm.ruankao.org.cn',d:'10/19 起'},
+    {u:'low',t:'更新简历（实习+项目）',s:'加入深圳飞速时代实习经历',d:'12 月前'}
+  ]
+};
+
+/* ============================================================
+   工具
+   ============================================================ */
+const $=id=>document.getElementById(id);
+const fmtDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const daysBetween=(d1,d2)=>{
+  const a=new Date(d1+'T00:00:00'),b=new Date(d2+'T00:00:00');
+  return Math.round((a-b)/86400000);
+};
+const WEEK_CN=['周日','周一','周二','周三','周四','周五','周六'];
+
+// localStorage key
+const LS_TASKS='workbench_tasks_20260902';
+const LS_GOALS='workbench_goals_20260902';
+
+/* ============================================================
+   状态
+   ============================================================ */
+const today=new Date();
+const todayStr=fmtDate(today);
+const dow=today.getDay();
+
+// 判断当前阶段
+function getPhase(){
+  for(const p of DATA.phases){
+    if(todayStr>=p.start && todayStr<=p.end) return p;
+  }
+  return DATA.phases[0]; // 默认软考期
+}
+const phase=getPhase();
+
+/* ============================================================
+   渲染
+   ============================================================ */
+// ① 顶部
+$('todayLabel').textContent=`${todayStr} · ${WEEK_CN[dow]}`;
+$('phaseLabel').textContent=phase.name;
+
+// ② 倒计时
+const cds=[
+  ['cd-ruankao',DATA.deadlines.ruankao.date],
+  ['cd-cet',DATA.deadlines.cet.date],
+  ['cd-dingdang',DATA.deadlines.dingdang.date],
+  ['cd-chushi',DATA.deadlines.chushi.date]
+];
+cds.forEach(([id,date])=>{
+  const n=daysBetween(date,todayStr);
+  $(id).textContent=Math.max(0,n);
+});
+
+// ③ 今日任务
+function loadTasks(){
+  try{return JSON.parse(localStorage.getItem(LS_TASKS))||{}}catch(e){return{}}
+}
+const taskState=loadTasks();
+
+// 今日用书提示（数据源：20260904_大三上书籍使用与进度规划_v1.md）
+// 按日期区间匹配：bookGuide.slots = [{start,end,math,ds,net,ruankao}]
+// 考完的科目自动隐藏（软考10/27后、六级12/12后不再显示对应行）
+const BOOK_GUIDE_SLOTS=[
+  // 高数第1章 + 数据结构第1-2章 + 计网第1-3章 + 软考阶段一/二
+  {start:'2026-09-07',end:'2026-09-19',
+   math:'高数第1章 函数·极限·连续',ds:'数据结构 第1-2章 绪论·线性表',net:'计网 第1-3章 体系/物理/链路',
+   ruankao:'阶段一 教材通读（教程）'},
+  {start:'2026-09-20',end:'2026-10-04',
+   math:'高数第2章 导数与微分',ds:'数据结构 第3章 栈·队列',net:'计网 第1-3章 体系/物理/链路',
+   ruankao:'阶段二 系统学习（教程+课程）'},
+  {start:'2026-10-05',end:'2026-10-27',
+   math:'高数第3章 中值定理与导数的应用',ds:'数据结构 第4章 树与二叉树',net:'计网 第4章 网络层',
+   ruankao:'阶段三/四 真题冲刺（模考卷）'},
+  // 软考结束后（10/28起），考研发力：高数第4章+数据结构第5章+计网第5章
+  {start:'2026-10-28',end:'2026-11-16',
+   math:'高数第4章 不定积分',ds:'数据结构 第5章 图',net:'计网 第5章 传输层',ruankao:''},
+  {start:'2026-11-17',end:'2026-12-07',
+   math:'高数第5章 定积分',ds:'数据结构 第6章 查找',net:'计网 第5章 传输层',ruankao:''},
+  {start:'2026-12-08',end:'2026-12-21',
+   math:'高数第6章 定积分的应用',ds:'数据结构 第7章 排序',net:'计网 第6章 应用层',ruankao:''},
+  // 六级考完后（12/13起），期末期：高数第7章 + 数据结构收尾
+  {start:'2026-12-22',end:'2027-01-31',
+   math:'高数第7章 微分方程',ds:'数据结构一轮收尾·复习',net:'计网一轮收尾·复习',ruankao:''}
+];
+function renderBookGuide(){
+  const bg=$('bookGuide');
+  // 过渡期不显示
+  if(todayStr<'2026-09-07'){bg.style.display='none';return;}
+  const slot=BOOK_GUIDE_SLOTS.find(s=>todayStr>=s.start && todayStr<=s.end);
+  if(!slot){bg.style.display='none';return;}
+  let items='';
+  // 数学（全程显示）
+  items+=`<div class="bg-item"><b>数学</b> → <span class="bk">${slot.math}</span></div>`;
+  // 408：数据结构 + 计网（全程显示）
+  items+=`<div class="bg-item"><b>408</b> → <span class="bk">${slot.ds}</span> ｜ ${slot.net}</div>`;
+  // 软考：10/27 后隐藏
+  if(slot.ruankao && todayStr<='2026-10-27'){
+    items+=`<div class="bg-item"><b>软考</b> → <span class="bk">${slot.ruankao}</span></div>`;
+  }
+  // 六级：12/12 前显示
+  if(todayStr<='2026-12-12'){
+    items+=`<div class="bg-item"><b>六级</b> → <span class="bk">真题听力精听30min + 单词APP</span></div>`;
+  }
+  if(!items){bg.style.display='none';return;}
+  bg.style.display='block';
+  bg.innerHTML=`<div class="bg-title">今日用书</div>${items}`;
+}
+
+function renderTasks(){
+  // 过渡期提示：9/2-9/6 为过渡期，9/7 起正式执行全套计划
+  const banner=$('transitionBanner');
+  if(todayStr>='2026-09-02' && todayStr<='2026-09-06'){
+    banner.style.display='block';
+    banner.innerHTML='<b>过渡期（9/2–9/6）</b>：教材陆续到货、熟悉通勤路线（生活区→教学区约15分钟，教学区→图书馆5-10分钟）、适应开学节奏。<b>9/7（周一）起正式执行全套任务计划。</b>过渡期可先软考教材通读预热、保持作息。';
+  }else{
+    banner.style.display='none';
+  }
+  // 今日用书提示：按日期区间匹配书籍进度线（数据源：20260904_书籍使用与进度规划_v1.md）
+  renderBookGuide();
+  const dayKey=String(dow);
+  const list=DATA.dayTasks[dayKey]?DATA.dayTasks[dayKey][phase.id]:[];
+  if(!list.length){$('todayTasks').innerHTML='<p style="color:var(--text-muted)">今日无固定安排</p>';return;}
+  const main=list.filter(t=>['math','408','soft','eng','course','exam'].includes(t.m));
+  const side=list.filter(t=>t.m==='side');
+  const taskKey=t=>`${todayStr}_${t.t}`;
+
+  let html='';
+  if(main.length){
+    html+='<div class="task-group main"><div class="g-title">主线 · 必做打卡 <span class="tag">主线</span></div>';
+    main.forEach(t=>{
+      const k=taskKey(t);
+      const done=!!taskState[k];
+      html+=`<label class="task-item ${done?'done':''}">
+        <input type="checkbox" ${done?'checked':''} data-k="${k}" onchange="toggleTask(this)">
+        <span class="box"></span>
+        <span class="tt"><span class="tt-main">${t.t}</span>${t.s?'<br><span class="tt-sub">'+t.s+'</span>':''}</span>
+        <span class="dir ${t.dir}">${t.d}</span>
+      </label>`;
+    });
+    html+='</div>';
+  }
+  if(side.length){
+    html+='<div class="task-group side"><div class="g-title">支线 · 选做加分 <span class="tag">支线</span></div>';
+    side.forEach(t=>{
+      const k=taskKey(t);
+      const done=!!taskState[k];
+      html+=`<label class="task-item ${done?'done':''}">
+        <input type="checkbox" ${done?'checked':''} data-k="${k}" onchange="toggleTask(this)">
+        <span class="box"></span>
+        <span class="tt"><span class="tt-main">${t.t}</span>${t.s?'<br><span class="tt-sub">'+t.s+'</span>':''}</span>
+        <span class="dir ${t.dir}">${t.d}</span>
+      </label>`;
+    });
+    html+='</div>';
+  }
+  $('todayTasks').innerHTML=html;
+  updateRing();
+}
+window.toggleTask=function(el){
+  const k=el.dataset.k;
+  if(el.checked){taskState[k]=true}else{delete taskState[k]}
+  try{localStorage.setItem(LS_TASKS,JSON.stringify(taskState))}catch(e){}
+  renderTasks();
+};
+function updateRing(){
+  const dayKey=String(dow);
+  const list=DATA.dayTasks[dayKey]?DATA.dayTasks[dayKey][phase.id]:[];
+  const main=list.filter(t=>['math','408','soft','eng','course','exam'].includes(t.m));
+  const done=main.filter(t=>taskState[`${todayStr}_${t.t}`]).length;
+  const total=main.length;
+  const pct=total?Math.round(done/total*100):0;
+  const C=207.3;
+  $('ringFg').style.strokeDashoffset=C*(1-pct/100);
+  $('ringNum').textContent=pct+'%';
+  $('todayCompleteText').textContent=`今日主线完成 ${done}/${total}`;
+  $('todayCompleteSub').textContent=total?'勾选主线任务自动更新':'今日无主线任务';
+}
+
+// ④ 本周时间分配
+function renderWeek(){
+  const plan=DATA.weekPlan[phase.id]||DATA.weekPlan.soft;
+  $('weekPlanLabel').textContent=phase.name;
+  const legend={};
+  let rows='';
+  plan.forEach(p=>{
+    rows+=`<tr><td data-label="任务">${p.task}</td><td data-label="时长">${p.hours}</td><td class="bar-cell" data-label="占比"><div class="week-bar"><i style="width:${p.pct}%;background:${p.color}"></i></div></td></tr>`;
+  });
+  $('weekRows').innerHTML=rows;
+  $('weekLegend').innerHTML=plan.map(p=>`<span class="lg"><span class="sw" style="background:${p.color}"></span>${p.task} ${p.hours}</span>`).join('');
+}
+
+// ⑤ 阶段目标
+function loadGoals(){
+  try{return JSON.parse(localStorage.getItem(LS_GOALS))||{}}catch(e){return{}}
+}
+const goalState=loadGoals();
+function renderGoals(){
+  let html='';
+  Object.keys(DATA.goals).forEach(key=>{
+    const g=DATA.goals[key];
+    html+=`<div class="goal-col ${key}"><div class="gc-title">${g.title}</div>`;
+    g.items.forEach((it,idx)=>{
+      const gk=`${key}_${idx}`;
+      const done=!!goalState[gk];
+      html+=`<label class="goal-item ${done?'checked':''}">
+        <input type="checkbox" ${done?'checked':''} data-gk="${gk}" onchange="toggleGoal(this)">
+        <span class="gbox"></span><span>${it}</span>
+      </label>`;
+    });
+    html+='</div>';
+  });
+  $('goalGrid').innerHTML=html;
+}
+window.toggleGoal=function(el){
+  const gk=el.dataset.gk;
+  if(el.checked){goalState[gk]=true}else{delete goalState[gk]}
+  try{localStorage.setItem(LS_GOALS,JSON.stringify(goalState))}catch(e){}
+  renderGoals();
+};
+
+// ⑥ 关键决策时间轴（水平线 + 上下交错 + 进度条 + 可点击时间段 + 展开细化目标）
+const LS_TIMELINE='workbench_timeline_20260902';
+const LS_PHASEGOALS='workbench_phasegoals_20260902';
+function loadState(key){try{return JSON.parse(localStorage.getItem(key))||{}}catch(e){return{}}}
+const tlState=loadState(LS_TIMELINE);
+const pgState=loadState(LS_PHASEGOALS);
+let activePhase=null;
+
+function typeLabel(t){
+  if(t==='warn')return '近期·高优先';
+  if(t==='now')return '进行中';
+  return '节点';
+}
+function renderSegments(){
+  $('tlSegments').innerHTML=DATA.timelinePhases.map(p=>
+    `<div class="tl-seg ${p.cls} ${activePhase===p.id?'active':''}" style="left:${p.pos}%;width:${p.w}%" onclick="togglePhase('${p.id}')">${p.label}</div>`
+  ).join('');
+}
+function renderPanel(){
+  const box=$('tlPanel');
+  if(!activePhase){box.innerHTML='';return;}
+  const p=DATA.timelinePhases.find(x=>x.id===activePhase);
+  if(!p){box.innerHTML='';return;}
+  let secs='';
+  Object.keys(p.goals).forEach(sec=>{
+    const items=p.goals[sec].map((g,i)=>{
+      const k=`${p.id}_${sec}_${i}`;
+      const done=!!pgState[k];
+      return `<li class="${done?'checked':''}" onclick="togglePg(this)" data-k="${k}"><span class="pbox"></span><span>${g}</span></li>`;
+    }).join('');
+    secs+=`<div class="sec-title">${sec}</div><ul class="tl-plist">${items}</ul>`;
+  });
+  box.innerHTML=`
+    <div class="tl-panel">
+      <div class="tl-panel-head">
+        <div><div class="t">${p.label} · 细化目标</div><div class="s">${p.range}</div></div>
+        <span class="close" onclick="togglePhase(null)">收起 ✕</span>
+      </div>
+      <div class="tl-panel-body">${secs}<div class="phint">勾选自动保存 · 点击时间段可收起/展开</div></div>
+    </div>`;
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+window.togglePhase=function(id){
+  activePhase=(activePhase===id)?null:id;
+  renderSegments();
+  renderPanel();
+};
+window.togglePg=function(el){
+  const k=el.dataset.k;
+  if(el.classList.contains('checked')){delete pgState[k]}else{pgState[k]=true}
+  try{localStorage.setItem(LS_PHASEGOALS,JSON.stringify(pgState))}catch(e){}
+  renderPanel();
+};
+function renderTimeline(){
+  // 事件节点（上下交错：odd上 even下）
+  const nodes=DATA.timelineNodes.map((n,i)=>{
+    const key=n.ev;
+    const done=!!tlState[key];
+    const cls=done?'done':n.type;
+    return `
+    <div class="tl-node ${cls}" style="left:${n.pos}%">
+      <span class="dot"></span>
+      <span class="tl-connect"></span>
+      <div class="tl-card">
+        <div class="tc-check ${done?'checked':''}" data-ev="${key}" onclick="toggleTimeline(this)"></div>
+        <div class="tc-date">${n.date}</div>
+        <div class="tc-ev">${n.ev}</div>
+        <span class="tc-type">${typeLabel(n.type)}</span>
+      </div>
+    </div>`;
+  }).join('');
+  $('timeline').innerHTML=nodes;
+  renderSegments();
+  renderPanel();
+  // 进度条
+  const total=DATA.timelineNodes.length;
+  const doneCount=DATA.timelineNodes.filter(n=>tlState[n.ev]).length;
+  $('tlProgressCount').textContent=`${doneCount} / ${total}`;
+  $('tlProgressFill').style.width=(total?doneCount/total*100:0)+'%';
+  $('tlProgressLabel').textContent=doneCount===total?'全部完成':'整体进度';
+}
+window.toggleTimeline=function(el){
+  const key=el.dataset.ev;
+  if(el.classList.contains('checked')){delete tlState[key]}else{tlState[key]=true}
+  try{localStorage.setItem(LS_TIMELINE,JSON.stringify(tlState))}catch(e){}
+  renderTimeline();
+};
+
+// ⑦ 院校 + 待办
+function renderSchools(){
+  $('schoolRows').innerHTML=DATA.schools.map(s=>`
+    <tr><td data-label="档位"><span class="badge-tier ${s.cls}">${s.tier}</span></td><td data-label="院校">${s.name}</td><td data-label="专业">${s.major}</td><td data-label="科目">${s.subject}</td><td data-label="学费/年">${s.fee}</td></tr>`).join('');
+}
+function renderTodos(){
+  $('todoList').innerHTML=DATA.todos.map(t=>`
+    <div class="todo-item"><span class="todo-urgent ${t.u}"></span>
+      <div class="todo-body"><div class="todo-t">${t.t}</div><div class="todo-s">${t.s}</div></div>
+      <div class="todo-d">${t.d}</div></div>`).join('');
+}
+
+// 导出 / 导入：手动跨设备同步（勾选数据以 json 文件形式导出/导入）
+function exportData(){
+  const keys=[LS_TASKS,LS_GOALS,LS_TIMELINE,LS_PHASEGOALS];
+  const payload={__workbench:'study-workbench',exported:fmtDate(new Date()),data:{}};
+  keys.forEach(k=>{try{const v=localStorage.getItem(k);if(v)payload.data[k]=JSON.parse(v)}catch(e){}});
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`workbench-backup-${todayStr}.json`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+function importData(file){
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const obj=JSON.parse(e.target.result);
+      if(!obj||obj.__workbench!=='study-workbench'){alert('文件格式不正确，请使用工作台导出的 .json 备份文件');return}
+      const keys=[LS_TASKS,LS_GOALS,LS_TIMELINE,LS_PHASEGOALS];
+      keys.forEach(k=>{
+        if(obj.data&&obj.data[k]){try{localStorage.setItem(k,JSON.stringify(obj.data[k]))}catch(err){}}
+      });
+      // 重新加载内存状态并重绘
+      Object.assign(taskState,loadState(LS_TASKS));
+      Object.assign(goalState,loadState(LS_GOALS));
+      Object.assign(tlState,loadState(LS_TIMELINE));
+      Object.assign(pgState,loadState(LS_PHASEGOALS));
+      init();
+      alert('导入成功，数据已恢复');
+    }catch(err){alert('导入失败：文件解析出错');}
+  };
+  reader.readAsText(file);
+}
+$('exportBtn').addEventListener('click',exportData);
+$('importBtn').addEventListener('click',function(){$('syncFileInput').click()});
+$('syncFileInput').addEventListener('change',function(){if(this.files&&this.files[0])importData(this.files[0]);this.value=''});
+
+// 初始化
+function init(){
+  $('dayLineDay').textContent=`${todayStr} · ${WEEK_CN[dow]}`;
+  $('dayLinePhase').textContent=phase.name;
+  renderTasks();
+  renderWeek();
+  renderGoals();
+  renderTimeline();
+  renderSchools();
+  renderTodos();
+}
+init();
+</script>
+</body>
+</html>
