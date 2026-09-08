@@ -478,7 +478,7 @@ body{
     <div class="card">
       <div class="card-head">
         <h2>今日任务</h2>
-        <span class="hint">主线必做 · 支线选做 · 自动保存</span>
+        <span class="hint">弹性执行：时间自定、做完打勾 · 主线必做 · 支线选做</span>
       </div>
       <div class="today-dayline">
         <span class="d" id="dayLineDay">--</span>
@@ -602,148 +602,170 @@ const DATA = {
     '1':{
       soft:[
         {m:'course',t:'上课：网络攻防（上午）+ 现代密码学（下午）',s:'白天',d:'课程·软考同源',dir:'kaoyan'},
-        {m:'eng',t:'六级：听力精听 30min（精听四步法）',s:'19:00-19:30',d:'英语',dir:'line'},
-        {m:'math',t:'数学一：看课/刷题 1h',s:'19:30-20:30',d:'考研',dir:'line'},
-        {m:'soft',t:'软考 1.5h（教材通读/刷题）',s:'20:30-22:00',d:'软考',dir:'kaoyan'}
+        {m:'math',t:'数学：张宇第1讲（函数部分）看课 + 例题',s:'1.5h',d:'考研',dir:'line'},
+        {m:'soft',t:'软考：教程第1章 通读（信息安全基础）',s:'1h',d:'软考',dir:'kaoyan'},
+        {m:'eng',t:'六级：听力精听 30min（精听四步法）',s:'0.5h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（午饭后+睡前碎片）',s:'碎片',d:'英语',dir:'line'}
       ],
       post:[
         {m:'course',t:'上课：网络攻防 + 现代密码学',s:'白天',d:'课程·408同源',dir:'kaoyan'},
-        {m:'eng',t:'六级：听力精听 30min（精听四步法）',s:'19:00-19:30',d:'英语',dir:'line'},
-        {m:'math',t:'数学一刷题 1h',s:'19:30-20:30',d:'考研',dir:'line'},
-        {m:'408',t:'408 复习 1h（数据结构）',s:'20:30-21:30',d:'考研',dir:'kaoyan'}
+        {m:'math',t:'数学一刷题 1h',s:'1h',d:'考研',dir:'line'},
+        {m:'408',t:'408 复习 1h（数据结构）',s:'1h',d:'考研',dir:'kaoyan'},
+        {m:'eng',t:'六级：听力精听 30min（精听四步法）',s:'0.5h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（午饭后+睡前碎片）',s:'碎片',d:'英语',dir:'line'}
       ],
       final:[
         {m:'course',t:'上课：网络攻防 + 现代密码学',s:'白天',d:'期末课程',dir:'kaoyan'},
-        {m:'exam',t:'期末复习 2h',s:'19:00-21:00',d:'绩点优先',dir:'kaoyan'},
-        {m:'math',t:'数学一保持手感 0.5h',s:'21:00-21:30',d:'考研',dir:'line'}
+        {m:'exam',t:'期末复习 2h',s:'2h',d:'绩点优先',dir:'kaoyan'},
+        {m:'math',t:'数学一保持手感 0.5h',s:'0.5h',d:'考研',dir:'line'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'}
       ]
     },
-    // 周二（有课日：自然语言处理 + 计算机英语）
+    // 周二（有课日：自然语言处理 + 计算机英语；★ 健身房开放首日）
     '2':{
       soft:[
         {m:'course',t:'上课：自然语言处理（上午）+ 计算机英语（14:00-15:20）',s:'白天',d:'课程',dir:'line'},
-        {m:'eng',t:'六级：听力精听 30min（精听四步法）',s:'19:00-19:30',d:'英语',dir:'line'},
-        {m:'eng',t:'英语阅读 1h（六级真题）',s:'19:30-20:30',d:'英语',dir:'line'},
-        {m:'soft',t:'软考 1.5h（重点章节）',s:'20:30-22:00',d:'软考',dir:'kaoyan'}
+        {m:'math',t:'数学：高数第1章收尾（极限+连续+例题独立做）',s:'1.5h',d:'考研',dir:'line'},
+        {m:'soft',t:'软考：教程第2章 密码学基础 通读+划重点',s:'1h',d:'软考',dir:'kaoyan'},
+        {m:'eng',t:'六级：真题阅读 1 篇 + 精析',s:'1h',d:'英语',dir:'line'},
+        {m:'eng',t:'六级：听力精听 30min（C 1篇+B 半篇）',s:'0.5h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（午饭后+睡前碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'fit',t:'健身 A日（健身房开放首日）',s:'1h',d:'健身',dir:'work'},
+        {m:'side',t:'实习：临时项目（弹性）',s:'按需',d:'支线',dir:'work'}
       ],
       post:[
         {m:'course',t:'上课：自然语言处理 + 计算机英语',s:'白天',d:'课程',dir:'line'},
-        {m:'eng',t:'六级：听力精听 30min（精听四步法）',s:'19:00-19:30',d:'英语',dir:'line'},
-        {m:'eng',t:'英语阅读 1h（考研英一）',s:'19:30-20:30',d:'英语',dir:'line'},
-        {m:'math',t:'数学一刷题 1h',s:'20:30-21:30',d:'考研',dir:'line'}
+        {m:'math',t:'数学一刷题 1h',s:'1h',d:'考研',dir:'line'},
+        {m:'eng',t:'英语阅读 1h（考研英一）',s:'1h',d:'英语',dir:'line'},
+        {m:'eng',t:'六级：听力精听 30min（精听四步法）',s:'0.5h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（午饭后+睡前碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'fit',t:'健身 A日（健身房开放首日）',s:'1h',d:'健身',dir:'work'},
+        {m:'side',t:'实习：临时项目（弹性）',s:'按需',d:'支线',dir:'work'}
       ],
       final:[
         {m:'course',t:'上课：自然语言处理 + 计算机英语',s:'白天',d:'期末课程',dir:'line'},
-        {m:'exam',t:'期末复习 2h',s:'19:00-21:00',d:'绩点优先',dir:'kaoyan'}
+        {m:'exam',t:'期末复习 2h',s:'2h',d:'绩点优先',dir:'kaoyan'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'fit',t:'健身 A日',s:'1h',d:'健身',dir:'work'}
       ]
     },
-    // 周三（空余日·数学+软考+408+健身B日）
+    // 周三（空余日·数学+软考+408；健身休息）
     '3':{
       soft:[
-        {m:'math',t:'数学一 2.5h（高数基础·看课刷题）',s:'10:00-12:30',d:'考研',dir:'line'},
-        {m:'soft',t:'软考 2h（密码学/防火墙/等保）',s:'14:00-16:00',d:'软考',dir:'kaoyan'},
-        {m:'408',t:'408 1h（数据结构）',s:'16:00-17:00',d:'考研',dir:'kaoyan'},
-        {m:'side',t:'V3 网安 0.5h + 健身 1h（B日）',s:'17:00-18:30',d:'支线',dir:'work'},
-        {m:'eng',t:'六级：听力精听 30min（精听四步法）',s:'19:00-19:30',d:'英语',dir:'line'},
-        {m:'soft',t:'软考 1.5h（刷题/背知识点）',s:'19:30-21:00',d:'软考',dir:'kaoyan'}
+        {m:'math',t:'数学：高数第1章收尾+练习（若已收尾进第2讲）',s:'2h',d:'考研',dir:'line'},
+        {m:'soft',t:'软考：教程第3章 通读+划重点',s:'1.5h',d:'软考',dir:'kaoyan'},
+        {m:'408',t:'408：王道数据结构第1章 绪论（时间复杂度）',s:'1h',d:'考研',dir:'kaoyan'},
+        {m:'eng',t:'六级：听力精听 30min（精听四步法）',s:'0.5h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（午饭后+睡前碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'side',t:'V3：SQL注入原理 0.5h',s:'0.5h',d:'支线',dir:'work'}
       ],
       post:[
-        {m:'math',t:'数学一 2.5h',s:'10:00-12:30',d:'考研',dir:'line'},
-        {m:'408',t:'408 2h（数据结构核心）',s:'14:00-16:00',d:'考研',dir:'kaoyan'},
-        {m:'eng',t:'英语 1.5h（阅读/精听）',s:'16:00-17:30',d:'英语',dir:'line'},
-        {m:'side',t:'V3 网安 0.5h + 健身 1h（B日）',s:'17:00-18:30',d:'支线',dir:'work'},
-        {m:'eng',t:'六级：听力精听 30min',s:'19:00-19:30',d:'英语',dir:'line'},
-        {m:'math',t:'数学刷题/错题 2h',s:'19:30-21:30',d:'考研',dir:'line'}
+        {m:'math',t:'数学一 2h（高数基础）',s:'2h',d:'考研',dir:'line'},
+        {m:'408',t:'408 1.5h（数据结构核心）',s:'1.5h',d:'考研',dir:'kaoyan'},
+        {m:'eng',t:'英语 1h（阅读/精听）',s:'1h',d:'英语',dir:'line'},
+        {m:'eng',t:'六级：听力精听 30min',s:'0.5h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'side',t:'V3 网安 0.5h',s:'0.5h',d:'支线',dir:'work'}
       ],
       final:[
-        {m:'exam',t:'期末复习 4h（专业核心课）',s:'10:00-12:30 + 14:00-17:00',d:'绩点优先',dir:'kaoyan'},
-        {m:'side',t:'健身 1h',s:'17:30-18:30',d:'支线',dir:'work'},
-        {m:'math',t:'数学一保持手感 1h',s:'19:30-20:30',d:'考研',dir:'line'}
+        {m:'exam',t:'期末复习 4h（专业核心课）',s:'4h',d:'绩点优先',dir:'kaoyan'},
+        {m:'math',t:'数学一保持手感 1h',s:'1h',d:'考研',dir:'line'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'}
       ]
     },
     // 周四（空余日·数学+软考+408+实习）
     '4':{
       soft:[
-        {m:'math',t:'数学一 2.5h',s:'10:00-12:30',d:'考研',dir:'line'},
-        {m:'soft',t:'软考 2h',s:'14:00-16:00',d:'软考',dir:'kaoyan'},
-        {m:'408',t:'408 1h',s:'16:00-17:00',d:'考研',dir:'kaoyan'},
-        {m:'side',t:'实习 0.5h（全栈实战）',s:'17:00-17:30',d:'支线·后路',dir:'work'}
+        {m:'math',t:'数学：张宇第2讲 或 高数练习',s:'2h',d:'考研',dir:'line'},
+        {m:'soft',t:'软考：教程第4章 通读',s:'1.5h',d:'软考',dir:'kaoyan'},
+        {m:'408',t:'408：数据结构第2章 线性表开始',s:'1h',d:'考研',dir:'kaoyan'},
+        {m:'eng',t:'六级：听力精听 30min',s:'0.5h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（午饭后+睡前碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'side',t:'实习：全栈实战 0.5-1h（弹性）',s:'0.5-1h',d:'支线·后路',dir:'work'}
       ],
       post:[
-        {m:'math',t:'数学一 2.5h',s:'10:00-12:30',d:'考研',dir:'line'},
-        {m:'408',t:'408 2h',s:'14:00-16:00',d:'考研',dir:'kaoyan'},
-        {m:'eng',t:'英语 1h',s:'16:00-17:00',d:'英语',dir:'line'},
-        {m:'side',t:'实习 0.5h（全栈实战）',s:'17:00-17:30',d:'支线·后路',dir:'work'}
+        {m:'math',t:'数学一 2h',s:'2h',d:'考研',dir:'line'},
+        {m:'408',t:'408 1.5h（数据结构）',s:'1.5h',d:'考研',dir:'kaoyan'},
+        {m:'eng',t:'英语 1h',s:'1h',d:'英语',dir:'line'},
+        {m:'eng',t:'六级：听力精听 30min',s:'0.5h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'side',t:'实习：全栈实战 0.5-1h（弹性）',s:'0.5-1h',d:'支线·后路',dir:'work'}
       ],
       final:[
-        {m:'exam',t:'期末复习 4h',s:'10:00-12:30 + 14:00-16:00',d:'绩点优先',dir:'kaoyan'},
-        {m:'side',t:'实习 1h',s:'16:00-17:00',d:'支线',dir:'work'}
+        {m:'exam',t:'期末复习 4h',s:'4h',d:'绩点优先',dir:'kaoyan'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'side',t:'实习 1h',s:'1h',d:'支线',dir:'work'}
       ]
     },
     // 周五（上午 10:10-11:30 有课 + 数学+软考+六级+实习+健身C日）
     '5':{
       soft:[
-        {m:'course',t:'上课：网络空间安全法律法规',s:'10:10-11:30',d:'课程·软考法规',dir:'kaoyan'},
-        {m:'eng',t:'碎片：背单词/复习课程',s:'11:30-12:30',d:'英语',dir:'line'},
-        {m:'soft',t:'软考 1.5h',s:'14:00-15:30',d:'软考',dir:'kaoyan'},
-        {m:'eng',t:'六级 1h（套题/写译）',s:'15:30-16:30',d:'英语',dir:'line'},
-        {m:'math',t:'数学 1h（补上午缺口）',s:'16:30-17:30',d:'考研',dir:'line'},
-        {m:'side',t:'健身 1h（C日）',s:'17:30-18:30',d:'支线',dir:'work'},
-        {m:'side',t:'实习 1h（辅助后路）',s:'19:00-20:00',d:'支线·后路',dir:'work'},
-        {m:'side',t:'V3 网安 0.5h',s:'20:00-20:30',d:'支线',dir:'work'},
-        {m:'soft',t:'软考 1h（考公试探 2周1次）',s:'20:30-21:30',d:'软考',dir:'kaoyan'}
+        {m:'course',t:'上课：网络空间安全法律法规（10:10-11:30）',s:'白天',d:'课程·软考法规',dir:'kaoyan'},
+        {m:'soft',t:'软考：教程第5章 通读+划重点',s:'1.5h',d:'软考',dir:'kaoyan'},
+        {m:'eng',t:'六级：套题/写译 1h',s:'1h',d:'英语',dir:'line'},
+        {m:'math',t:'数学：第1章收尾或第2讲（下午补）',s:'1h',d:'考研',dir:'line'},
+        {m:'eng',t:'六级：听力精听 30min',s:'0.5h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（午饭后+睡前碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'fit',t:'健身 C日',s:'1h',d:'健身',dir:'work'},
+        {m:'side',t:'实习 1h（辅助后路）',s:'1h',d:'支线·后路',dir:'work'}
       ],
       post:[
-        {m:'course',t:'上课：网络空间安全法律法规',s:'10:10-11:30',d:'课程·408同源',dir:'kaoyan'},
-        {m:'eng',t:'碎片：背单词/复习课程',s:'11:30-12:30',d:'英语',dir:'line'},
-        {m:'408',t:'408 1.5h',s:'14:00-15:30',d:'考研',dir:'kaoyan'},
-        {m:'eng',t:'英语 1h',s:'15:30-16:30',d:'英语',dir:'line'},
-        {m:'math',t:'数学 1h（补上午缺口）',s:'16:30-17:30',d:'考研',dir:'line'},
-        {m:'side',t:'健身 1h（C日）',s:'17:30-18:30',d:'支线',dir:'work'},
-        {m:'side',t:'实习 1h（辅助后路）',s:'19:00-20:00',d:'支线·后路',dir:'work'},
-        {m:'side',t:'V3 网安 0.5h',s:'20:00-20:30',d:'支线',dir:'work'},
-        {m:'math',t:'数学或英语 1h',s:'20:30-21:30',d:'考研',dir:'line'}
+        {m:'course',t:'上课：网络空间安全法律法规',s:'白天',d:'课程·408同源',dir:'kaoyan'},
+        {m:'408',t:'408 1.5h（数据结构）',s:'1.5h',d:'考研',dir:'kaoyan'},
+        {m:'eng',t:'英语 1h',s:'1h',d:'英语',dir:'line'},
+        {m:'math',t:'数学 1h（补上午缺口）',s:'1h',d:'考研',dir:'line'},
+        {m:'eng',t:'六级：听力精听 30min',s:'0.5h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'fit',t:'健身 C日',s:'1h',d:'健身',dir:'work'},
+        {m:'side',t:'实习 1h（辅助后路）',s:'1h',d:'支线·后路',dir:'work'}
       ],
       final:[
-        {m:'course',t:'上课：网络空间安全法律法规',s:'10:10-11:30',d:'期末课程',dir:'kaoyan'},
-        {m:'exam',t:'期末复习 2h',s:'14:00-16:00',d:'绩点优先',dir:'kaoyan'},
-        {m:'side',t:'实习 1h',s:'16:00-17:00',d:'支线',dir:'work'}
+        {m:'course',t:'上课：网络空间安全法律法规',s:'白天',d:'期末课程',dir:'kaoyan'},
+        {m:'exam',t:'期末复习 2h',s:'2h',d:'绩点优先',dir:'kaoyan'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'}
       ]
     },
-    // 周六
+    // 周六（弹性补欠日）
     '6':{
       soft:[
-        {m:'math',t:'数学一 2.5h',s:'10:00-12:30',d:'考研',dir:'line'},
-        {m:'side',t:'实习 2h（全栈实战）',s:'14:00-16:00',d:'支线·后路',dir:'work'},
-        {m:'soft',t:'软考 1.5h',s:'16:00-17:30',d:'软考',dir:'kaoyan'}
+        {m:'math',t:'数学：补本周欠账/660题',s:'2h',d:'考研',dir:'line'},
+        {m:'soft',t:'软考：补欠账/章节练习',s:'1.5h',d:'软考',dir:'kaoyan'},
+        {m:'eng',t:'六级：完整套题 1 套（计时）',s:'2h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'side',t:'实习 2h（可选）',s:'2h',d:'支线·后路',dir:'work'}
       ],
       post:[
-        {m:'math',t:'数学一 2.5h',s:'10:00-12:30',d:'考研',dir:'line'},
-        {m:'side',t:'实习 2h（全栈实战）',s:'14:00-16:00',d:'支线·后路',dir:'work'},
-        {m:'408',t:'408 1.5h',s:'16:00-17:30',d:'考研',dir:'kaoyan'}
+        {m:'math',t:'数学一 2h',s:'2h',d:'考研',dir:'line'},
+        {m:'408',t:'408 1.5h（数据结构）',s:'1.5h',d:'考研',dir:'kaoyan'},
+        {m:'eng',t:'六级：完整套题 1 套（计时）',s:'2h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'side',t:'实习 2h（可选）',s:'2h',d:'支线·后路',dir:'work'}
       ],
       final:[
-        {m:'exam',t:'期末复习 3h',s:'10:00-12:30',d:'绩点优先',dir:'kaoyan'},
-        {m:'exam',t:'期末复习 2h',s:'14:00-16:00',d:'绩点优先',dir:'kaoyan'}
+        {m:'exam',t:'期末复习 3h',s:'3h',d:'绩点优先',dir:'kaoyan'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'}
       ]
     },
-    // 周日
+    // 周日（弹性补欠日 + 周复盘）
     '0':{
       soft:[
-        {m:'eng',t:'六级 2h（听力回顾+单词总复习）',s:'10:00-12:30',d:'英语',dir:'line'},
-        {m:'408',t:'408 1.5h',s:'14:00-15:30',d:'考研',dir:'kaoyan'},
-        {m:'side',t:'V3 网安 1h',s:'15:30-16:30',d:'支线',dir:'work'},
-        {m:'soft',t:'软考 1h（周复盘）',s:'16:30-17:30',d:'软考',dir:'kaoyan'}
+        {m:'math',t:'补本周未完成（数学优先）',s:'1.5h',d:'考研',dir:'line'},
+        {m:'soft',t:'软考：补欠账/周复盘',s:'1h',d:'软考',dir:'kaoyan'},
+        {m:'eng',t:'六级：听力回顾 + 单词总复习',s:'1h',d:'英语',dir:'line'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'side',t:'V3 网安 1h',s:'1h',d:'支线',dir:'work'}
       ],
       post:[
-        {m:'eng',t:'英语 2h',s:'10:00-12:30',d:'英语',dir:'line'},
-        {m:'408',t:'408 2h',s:'14:00-16:00',d:'考研',dir:'kaoyan'},
-        {m:'side',t:'V3 网安 1h',s:'16:00-17:00',d:'支线',dir:'work'},
-        {m:'math',t:'数学 1h（查漏补缺）',s:'17:00-18:00',d:'考研',dir:'line'}
+        {m:'eng',t:'英语 2h（阅读+精听回顾）',s:'2h',d:'英语',dir:'line'},
+        {m:'408',t:'408 1.5h（数据结构）',s:'1.5h',d:'考研',dir:'kaoyan'},
+        {m:'math',t:'数学 1h（查漏补缺）',s:'1h',d:'考研',dir:'line'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'},
+        {m:'side',t:'V3 网安 1h',s:'1h',d:'支线',dir:'work'}
       ],
       final:[
-        {m:'exam',t:'期末复习 3h',s:'10:00-12:30',d:'绩点优先',dir:'kaoyan'},
-        {m:'math',t:'数学一保持手感 1h',s:'14:00-15:00',d:'考研',dir:'line'}
+        {m:'exam',t:'期末复习 3h',s:'3h',d:'绩点优先',dir:'kaoyan'},
+        {m:'math',t:'数学一保持手感 1h',s:'1h',d:'考研',dir:'line'},
+        {m:'word',t:'单词 50 词（碎片）',s:'碎片',d:'英语',dir:'line'}
       ]
     }
   },
@@ -966,7 +988,7 @@ function renderTasks(){
   const dayKey=String(dow);
   const list=DATA.dayTasks[dayKey]?DATA.dayTasks[dayKey][phase.id]:[];
   if(!list.length){$('todayTasks').innerHTML='<p style="color:var(--text-muted)">今日无固定安排</p>';return;}
-  const main=list.filter(t=>['math','408','soft','eng','course','exam'].includes(t.m));
+  const main=list.filter(t=>['math','408','soft','eng','course','exam','fit','word'].includes(t.m));
   const side=list.filter(t=>t.m==='side');
   const taskKey=t=>`${todayStr}_${t.t}`;
 
@@ -1011,7 +1033,7 @@ window.toggleTask=function(el){
 function updateRing(){
   const dayKey=String(dow);
   const list=DATA.dayTasks[dayKey]?DATA.dayTasks[dayKey][phase.id]:[];
-  const main=list.filter(t=>['math','408','soft','eng','course','exam'].includes(t.m));
+  const main=list.filter(t=>['math','408','soft','eng','course','exam','fit','word'].includes(t.m));
   const done=main.filter(t=>taskState[`${todayStr}_${t.t}`]).length;
   const total=main.length;
   const pct=total?Math.round(done/total*100):0;
